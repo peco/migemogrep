@@ -102,7 +102,6 @@ func _main() int {
 		return 1
 	}
 
-
 	// If there's only one arg, then we need to match against the input
 	if flag.NArg() == 1 {
 		if err = grep(os.Stdin, re); err != nil {
