@@ -15,6 +15,20 @@ import (
 
 // Looks for possible dictionary directories.
 // We should expand this to more unix-y locations, too
+//
+// Locations to search:
+// 1. User-supplied location on the command line
+//    -d "dictdir"
+// 2. User-supplied location in the env var
+//    GOMIGEMO_DICTDIR
+//    GMIGEMO_DICTDIR (for backwards compatibility)
+// 3. User-supplied config dir
+//    ~/.config/gomigemo/dict
+// 4. Places that sound be system config (XXX won't implement for now)
+//    /var/lib/gomigemo/dict
+// 5. Somewhere in the gopath where gomigemo resides
+//    $GOPATH/github.com/koron/gomigemo/_dict
+// 6. Current directory
 func dictdir() string {
 	// I want to change this to G*O*MIGEMO_DICTDIR
 	d := os.Getenv("GMIGEMO_DICTDIR")
