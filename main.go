@@ -79,7 +79,7 @@ func main() {
 
 func _main() int {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "Usage of main: [pattern] [files...]")
+		fmt.Fprintln(os.Stderr, "Usage: migemogrep [options] pattern [files...]")
 	}
 
 	flag.Parse()
@@ -101,7 +101,6 @@ func _main() int {
 		fmt.Fprintln(os.Stderr, err)
 		return 1
 	}
-
 
 	// If there's only one arg, then we need to match against the input
 	if flag.NArg() == 1 {
