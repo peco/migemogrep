@@ -79,7 +79,7 @@ func main() {
 
 func _main() int {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "Usage of main: [pattern] [files...]")
+		fmt.Fprintln(os.Stderr, "Usage: migemogrep [options] pattern [files...]")
 	}
 
 	flag.Parse()
