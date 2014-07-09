@@ -45,8 +45,9 @@ func dictdir() string {
 	dirs := []string{
 		os.Getenv("GOMIGEMO_DICTDIR"),
 		os.Getenv("GMIGEMO_DICDIR"),
-		// あれ、これってWindowsだと動かないんだっけ？
 		filepath.Join(os.Getenv("HOME"), ".config", "gomigemo", "dict"),
+		filepath.Join(os.Getenv("USERPROFILE"), ".config", "gomigemo", "dict"),
+		filepath.Join(os.Getenv("APPDATA"), "gomigemo", "dict"),
 	}
 
 	wd, err := os.Getwd()
@@ -65,6 +66,9 @@ func dictdir() string {
 	}
 
 	for _, dir := range dirs {
+		if dir == "" {
+			continue
+		}
 		if err := checkdir(dir); err == nil {
 			return dir
 		}
