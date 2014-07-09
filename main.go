@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/koron/gomigemo/migemo"
 )
@@ -29,26 +28,50 @@ import (
 // 5. Somewhere in the gopath where gomigemo resides
 //    $GOPATH/github.com/koron/gomigemo/_dict
 // 6. Current directory
+func checkdir(dir string) error {
+	fi, err := os.Stat(dir)
+	if err != nil {
+		return err
+	}
+
+	if !fi.IsDir() {
+		return fmt.Errorf("not a directory")
+	}
+	return nil
+}
+
+// This function looks for the default dictionary location
 func dictdir() string {
-	// I want to change this to G*O*MIGEMO_DICTDIR
-	d := os.Getenv("GMIGEMO_DICTDIR")
-	if d != "" {
-		return d
+	dirs := []string{
+		os.Getenv("GOMIGEMO_DICTDIR"),
+		os.Getenv("GMIGEMO_DICDIR"),
+		// あれ、これってWindowsだと動かないんだっけ？
+		filepath.Join(os.Getenv("HOME"), ".config", "gomigemo", "dict"),
 	}
-	d = os.Getenv("GOPATH")
-	if d == "" {
-		d = "."
+
+	wd, err := os.Getwd()
+	if err != nil {
+		wd = ""
 	}
-	for _, p := range strings.Split(d, string(filepath.ListSeparator)) {
-		candidate := filepath.Join(p, "src", "github.com", "koron", "gomigemo", "_dict")
-		if _, err := os.Stat(candidate); err != nil {
-			continue
+
+	// Add GOPATH
+	if d := os.Getenv("GOPATH"); d != "" {
+		for _, p := range filepath.SplitList(d) {
+			p = filepath.Join(p, "src", "github.com", "koron", "gomigemo", "_dict")
+			dirs = append(dirs, p)
 		}
-		return candidate
+	} else if wd != "" {
+		dirs = append(dirs, filepath.Join(wd, "src", "github.com", "koron", "gomigemo", "_dict"))
+	}
+
+	for _, dir := range dirs {
+		if err := checkdir(dir); err == nil {
+			return dir
+		}
 	}
 
 	// fallback to current directory
-	return d
+	return wd
 }
 
 var dictPath = flag.String("d", dictdir(), "Location to dictionary")
