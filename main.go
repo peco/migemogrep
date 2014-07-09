@@ -59,6 +59,11 @@ func grep(r io.Reader, re *regexp.Regexp) error {
 }
 
 func main() {
+	st := _main()
+	os.Exit(st)
+}
+
+func _main() int {
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage of main: [pattern] [files...]")
 	}
@@ -68,19 +73,19 @@ func main() {
 	if flag.NArg() != 1 && flag.NArg() != 2 {
 		flag.Usage()
 		flag.PrintDefaults()
-		os.Exit(1)
+		return 1
 	}
 
 	dict, err := migemo.Load(*dictPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return 1
 	}
 
 	re, err := migemo.Compile(dict, flag.Arg(0))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		return 1
 	}
 
 
@@ -88,25 +93,26 @@ func main() {
 	if flag.NArg() == 1 {
 		if err = grep(os.Stdin, re); err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return 1
 		}
 
 		// We got here, we're fine.
-		return
+		return 0
 	}
-
 
 	// More than one arg. We must be searching against a file
 	for _, arg := range flag.Args()[1:] {
 		f, err := os.Open(arg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return 1
 		}
 		defer f.Close()
 		if err = grep(f, re); err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			return 1
 		}
 	}
+
+	return 0
 }
