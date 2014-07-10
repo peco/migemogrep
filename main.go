@@ -12,6 +12,8 @@ import (
 	"github.com/koron/gomigemo/migemo"
 )
 
+const version = "0.1.0"
+
 // Does the grepping
 func grep(r io.Reader, re *regexp.Regexp) error {
 	buf := bufio.NewReader(r)
@@ -38,7 +40,7 @@ func main() {
 
 func _main() int {
 	flag.Usage = func() {
-		fmt.Fprintln(os.Stderr, "Usage: migemogrep [options] pattern [files...]")
+		fmt.Fprintf(os.Stderr, "migemogrep v%s\n\nUsage: migemogrep [options] pattern [files...]\n", version)
 	}
 	var dictPath = flag.String("d", "", "Alternate location to dictionary")
 
