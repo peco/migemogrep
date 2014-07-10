@@ -1,0 +1,38 @@
+{
+	"ImportPath": "github.com/peco/migemogrep",
+	"GoVersion": "go1.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/koron/gelatin/trie",
+			"Rev": "21a9ebd1a4bf74f14044518e75aeb6e8814b581f"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/conv",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/dict",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/embedict",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/inflator",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/migemo",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/readutil",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		},
+		{
+			"ImportPath": "github.com/koron/gomigemo/skk",
+			"Rev": "46cc93985b8a41aa35737a59a9e700012309e008"
+		}
+	]
+}
