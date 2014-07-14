@@ -4,8 +4,15 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
 	"regexp"
 )
+
+var out io.Writer
+
+func init() {
+	out = os.Stdout
+}
 
 // Does the grepping
 func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) error {
@@ -22,12 +29,12 @@ func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) error {
 		line := string(b)
 		if re.MatchString(line) {
 			if opt.optFilename {
-				fmt.Printf("%s:", opt.filename)
+				fmt.Fprintf(out, "%s:", opt.filename)
 			}
 			if opt.optNumber {
-				fmt.Printf("%d:", n)
+				fmt.Fprintf(out, "%d:", n)
 			}
-			fmt.Println(line)
+			fmt.Fprintln(out, line)
 		}
 		n++
 	}
