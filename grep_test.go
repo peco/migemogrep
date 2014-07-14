@@ -118,3 +118,37 @@ foobar
 		t.Fatalf("Should be %v but %v", expect, s)
 	}
 }
+
+func TestMultiple(t *testing.T) {
+	f, err := createTempfile(`
+barbaz
+foobar
+`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+
+	opt := &grepOpt{
+		optNumber:   true,
+		optFilename: true,
+	}
+
+	buf := new(bytes.Buffer)
+	out = buf
+	defer func() {
+		out = os.Stdout
+	}()
+
+	opt.filename = f.Name()
+	err = grep(f, regexp.MustCompile("^foo"), opt)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := buf.String()
+	expect := f.Name() + ":3:foobar\n"
+	if s != expect {
+		t.Fatalf("Should be %v but %v", expect, s)
+	}
+}
