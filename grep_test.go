@@ -113,7 +113,8 @@ foobar
 	}
 
 	s := buf.String()
-	if s != "2:foobar\n" {
-		t.Fatalf("Should be %v but %v", `2:foobar`, s)
+	expect := "3:foobar\n"
+	if s != expect {
+		t.Fatalf("Should be %v but %v", expect, s)
 	}
 }
