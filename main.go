@@ -14,9 +14,18 @@ import (
 
 const version = "0.1.0"
 
+var flag_n = flag.Bool("n", false, "print line number with output lines")
+
+type grepOpt struct {
+	optNumber   bool
+	optFilename bool
+	filename    string
+}
+
 // Does the grepping
-func grep(r io.Reader, re *regexp.Regexp) error {
+func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) error {
 	buf := bufio.NewReader(r)
+	n := 1
 	for {
 		b, _, err := buf.ReadLine()
 		if err != nil {
@@ -27,7 +36,14 @@ func grep(r io.Reader, re *regexp.Regexp) error {
 		}
 		line := string(b)
 		if re.MatchString(line) {
+			if opt.optFilename {
+				fmt.Printf("%s:", opt.filename)
+			}
+			if opt.optNumber {
+				fmt.Printf("%d:", n)
+			}
 			fmt.Println(line)
+			n++
 		}
 	}
 	return nil
@@ -46,7 +62,7 @@ func _main() int {
 
 	flag.Parse()
 
-	if flag.NArg() != 1 && flag.NArg() != 2 {
+	if flag.NArg() == 0 {
 		flag.Usage()
 		flag.PrintDefaults()
 		return 1
@@ -74,9 +90,16 @@ func _main() int {
 		return 1
 	}
 
+	opt := &grepOpt{
+		optNumber:   *flag_n,
+		optFilename: flag.NArg() > 2,
+	}
+
 	// If there's only one arg, then we need to match against the input
 	if flag.NArg() == 1 {
-		if err = grep(os.Stdin, re); err != nil {
+		opt.filename = "stdin"
+
+		if err = grep(os.Stdin, re, opt); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return 1
 		}
@@ -93,7 +116,9 @@ func _main() int {
 			return 1
 		}
 		defer f.Close()
-		if err = grep(f, re); err != nil {
+
+		opt.filename = arg
+		if err = grep(f, re, opt); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			return 1
 		}
