@@ -28,8 +28,8 @@ func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) error {
 				fmt.Printf("%d:", n)
 			}
 			fmt.Println(line)
-			n++
 		}
+		n++
 	}
 	return nil
 }
