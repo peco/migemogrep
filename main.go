@@ -26,6 +26,7 @@ func expandArgs() {
 	for _, arg := range os.Args[1:] {
 		if arg == "--" {
 			raw = true
+			continue
 		}
 		if !raw {
 			if matches, err := filepath.Glob(arg); err == nil && len(matches) > 0 {
