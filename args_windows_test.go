@@ -40,3 +40,19 @@ func TestExpandArgsDashDash(t *testing.T) {
 		t.Fatalf("Should be %v but %v", expect, os.Args)
 	}
 }
+
+func TestExpandArgsAll(t *testing.T) {
+	args := os.Args
+	defer func() {
+		os.Args = args
+	}()
+
+	os.Args = []string{"foo", "*"}
+	expandArgs()
+
+	for _, v := range os.Args {
+		if v[0] == '.' {
+			t.Fatalf("Should not exists %v", v)
+		}
+	}
+}
