@@ -152,3 +152,18 @@ foobar
 		t.Fatalf("Should be %v but %v", expect, s)
 	}
 }
+
+func TestExpandArgs(t *testing.T) {
+	args := os.Args
+	defer func() {
+		os.Args = args
+	}()
+
+	os.Args = []string{"foo", "*_test.go"}
+	expandArgs()
+
+	expect := []string{"foo", "grep_test.go"}
+	if os.Args[0] != "foo" || os.Args[1] != "grep_test.go" {
+		t.Fatalf("Should be %v but %v", expect, os.Args)
+	}
+}

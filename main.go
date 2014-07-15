@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/koron/gomigemo/embedict"
 	"github.com/koron/gomigemo/migemo"
@@ -19,7 +20,28 @@ type grepOpt struct {
 	filename    string
 }
 
+func expandArgs() {
+	args := []string{os.Args[0]}
+	raw := false
+	for _, arg := range os.Args[1:] {
+		if arg == "--" {
+			raw = true
+		}
+		if !raw {
+			if matches, err := filepath.Glob(arg); err == nil && len(matches) > 0 {
+				args = append(args, matches...)
+			} else {
+				args = append(args, arg)
+			}
+		} else {
+			args = append(args, arg)
+		}
+	}
+	os.Args = args
+}
+
 func main() {
+	expandArgs()
 	st := _main()
 	os.Exit(st)
 }
