@@ -14,8 +14,17 @@ func expandArgs() {
 			continue
 		}
 		if !raw {
-			if matches, err := filepath.Glob(arg); err == nil && len(matches) > 0 {
-				args = append(args, matches...)
+			candidates := []string{}
+			if matches, err := filepath.Glob(arg); err == nil {
+				// remove hidden files
+				for _, m := range matches {
+					if m[0] != '.' {
+						candidates = append(candidates, m)
+					}
+				}
+			}
+			if len(candidates) > 0 {
+				args = append(args, candidates...)
 			} else {
 				args = append(args, arg)
 			}
