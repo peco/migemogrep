@@ -12,6 +12,7 @@ import (
 const version = "0.1.0"
 
 var flag_n = flag.Bool("n", false, "print line number with output lines")
+var flag_H = flag.Bool("H", false, "print the filename for each match")
 
 type grepOpt struct {
 	optNumber   bool
@@ -62,7 +63,7 @@ func _main() int {
 
 	opt := &grepOpt{
 		optNumber:   *flag_n,
-		optFilename: flag.NArg() > 2,
+		optFilename: *flag_H || flag.NArg() > 2,
 	}
 
 	// If there's only one arg, then we need to match against the input
