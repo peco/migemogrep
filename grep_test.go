@@ -44,9 +44,13 @@ func TestEmpty(t *testing.T) {
 		out = os.Stdout
 	}()
 
-	err = grep(f, regexp.MustCompile("^foo"), opt)
+	n, err := grep(f, regexp.MustCompile("^foo"), opt)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if n != 0 {
+		t.Fatal("Should not be matched")
 	}
 
 	if buf.Len() > 0 {
@@ -75,9 +79,13 @@ barbaz
 		out = os.Stdout
 	}()
 
-	err = grep(f, regexp.MustCompile("^foo"), opt)
+	n, err := grep(f, regexp.MustCompile("^foo"), opt)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if n != 1 {
+		t.Fatalf("Should be matched once(matched=%d)", n)
 	}
 
 	s := buf.String()
@@ -107,7 +115,7 @@ foobar
 		out = os.Stdout
 	}()
 
-	err = grep(f, regexp.MustCompile("^foo"), opt)
+	_, err = grep(f, regexp.MustCompile("^foo"), opt)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -141,7 +149,7 @@ foobar
 	}()
 
 	opt.filename = f.Name()
-	err = grep(f, regexp.MustCompile("^foo"), opt)
+	_, err = grep(f, regexp.MustCompile("^foo"), opt)
 	if err != nil {
 		t.Fatal(err)
 	}

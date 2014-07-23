@@ -36,7 +36,7 @@ func _main() int {
 
 	if flag.NArg() == 0 {
 		flag.Usage()
-		return 1
+		return 2
 	}
 
 	var dict migemo.Dict
@@ -45,20 +45,20 @@ func _main() int {
 		dict, err = embedict.Load()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return 1
+			return 2
 		}
 	} else {
 		dict, err = migemo.Load(*dictPath)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return 1
+			return 2
 		}
 	}
 
 	re, err := migemo.Compile(dict, flag.Arg(0))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		return 1
+		return 2
 	}
 
 	opt := &grepOpt{
@@ -66,33 +66,38 @@ func _main() int {
 		optFilename: *flag_H || flag.NArg() > 2,
 	}
 
+	total := 0
 	// If there's only one arg, then we need to match against the input
 	if flag.NArg() == 1 {
 		opt.filename = "stdin"
 
-		if err = grep(os.Stdin, re, opt); err != nil {
+		if total, err = grep(os.Stdin, re, opt); err != nil {
 			fmt.Fprintln(os.Stderr, err)
-			return 1
+			return 2
 		}
 
-		// We got here, we're fine.
-		return 0
+	} else {
+		// More than one arg. We must be searching against a file
+		for _, arg := range flag.Args()[1:] {
+			f, err := os.Open(arg)
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				return 2
+			}
+			defer f.Close()
+
+			opt.filename = arg
+			var count int
+			if count, err = grep(f, re, opt); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				return 2
+			}
+			total += count
+		}
 	}
 
-	// More than one arg. We must be searching against a file
-	for _, arg := range flag.Args()[1:] {
-		f, err := os.Open(arg)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return 1
-		}
-		defer f.Close()
-
-		opt.filename = arg
-		if err = grep(f, re, opt); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return 1
-		}
+	if total == 0 {
+		return 1
 	}
 
 	return 0

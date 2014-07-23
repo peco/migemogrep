@@ -15,19 +15,21 @@ func init() {
 }
 
 // Does the grepping
-func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) error {
+func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) (int, error) {
 	buf := bufio.NewReader(r)
 	n := 1
+	count := 0
 	for {
 		b, _, err := buf.ReadLine()
 		if err != nil {
 			if err == io.EOF {
-				return nil
+				return count, nil
 			}
-			return err
+			return 0, err
 		}
 		line := string(b)
 		if re.MatchString(line) {
+			count++
 			if opt.optFilename {
 				fmt.Fprintf(out, "%s:", opt.filename)
 			}
@@ -38,6 +40,6 @@ func grep(r io.Reader, re *regexp.Regexp, opt *grepOpt) error {
 		}
 		n++
 	}
-	return nil
+	return count, nil
 }
 
