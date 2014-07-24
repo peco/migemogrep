@@ -1,5 +1,13 @@
 Changes
 =======
 
+v0.1.1
+  Bugs/Fixes
+  * Exit codes changed to 0 for success, 1 for no mwatch, and 2 for errors
+  * Wildcard expansion is done in the migemogrep command (Windows only)
+  Features
+  * Show matched file name via -H option
+  * Show matched line numbers via -n option
+
 v0.1.0 - 10 Jul 2014
   * Initial versioned release
