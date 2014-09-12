@@ -124,6 +124,7 @@ func buildBinaries() {
 		"-bc", "linux windows darwin",
 		"-d", os.Args[2],
 		"-resources-include", "README*,Changes",
+		"-main-dirs-exclude", "_example,build",
 	}
 	if err = run("goxc", goxcArgs...); err != nil {
 		panic(err)
