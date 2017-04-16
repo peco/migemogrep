@@ -1,0 +1,21 @@
+a	あ
+i	い
+u	う
+e	え
+o	お
+
+ka	か
+ki	き
+ku	く
+ke	け
+ko	こ
+
+na	な
+ni	に
+nu	ぬ
+ne	ね
+no	の
+
+kk	っ	k
+nn	ん
+nk	ん	k
